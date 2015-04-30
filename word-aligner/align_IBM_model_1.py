@@ -14,6 +14,8 @@ bitext = [[sentence.strip().split() for sentence in pair.split(' ||| ')] for pai
 e_count = defaultdict(int)
 g_count = defaultdict(int)
 t = defaultdict(lambda : defaultdict(float))
+q = defaultdict(lambda : defaultdict(lambda : defaultdict(lambda : defaultdict(float))))
+
 
 #P(e|g)
 e_word_count = 0
@@ -28,26 +30,50 @@ for (n, (g, e)) in enumerate(bitext):
             e_count[e_i] = 1
             e_word_count += 1
 
-    for g_i in set(g):
-        if (g_count[g_i] == 1):
+    for g_j in set(g):
+        if (g_count[g_j] == 1):
             continue
         else:
-            g_count[g_i] = 1
+            g_count[g_j] = 1
             g_word_count += 1
 
 
 # initialize p(e|g)
-for e_word in e_count.keys():
-    for g_word in g_count.keys():
+for g_word in g_count.keys():
+    for e_word in e_count.keys():
         #Uniform distribution
+        #sum_e t(e|g) = 1
         t[e_word][g_word] = 1.0 / e_word_count    
         
+# initialize q
+#sum_j=0^l q(j|i, l, m) where l is the length of g, m is the length of e
+for (n, (g, e)) in enumerate(bitext):
+    m = length(e)
+    l = length(g)
+    for i in xrange(m):
+        for j in xrange(l)+1:
+            q[j][i][l][m] = (1 / (l+1))
 
-for 
 #EM
 for t in xrange(T):
     # set all counts c(...) = 0
+    
+    c_2 = defaultdict(float)
+    c_1 = defaultdict(lambda : defaultdict(float))
+    c_4 = defaultdict(lambda : defaultdict(lambda : defaultdict(float)))
+    c_3 = defaultdict(lambda : defaultdict(lambda : defaultdict(lambda : defaultdict(float))))
 
+    #set all c_ to zero
+    for (k, (g, e)) in enumerate(bitext):
+        m_k = length(e)
+        l_k = length(g)
+
+        for i in xrange(m_k):
+            for j in xrange(l_k)+1:
+                c_1[g_j][e_i] = 0
+                c_2[g_j] = 0
+                c_3[j][i][l_k][m_k] = 0
+                c_4[i][l_k][m_k] = 0
 
     for (k, (g, e)) in enumerate(bitext):
         m_k = length(e)
@@ -67,19 +93,22 @@ for t in xrange(T):
 
                 delta = t[e_i][g_j] / sum_j
 
-                
 
                 c_1[g_j][e_i] = c_1[g_j][e_i] + delta
                 c_2[g_j] = c[g_j] + delta
                 c_3[j][i][l_k][m_k] = c_3[j][i][l_k][m_k] + delta
-                c_4[i][l][m_k] = c_4[i][l][m_k] = delta
+                c_4[i][l_k][m_k] = c_4[i][l_k][m_k] + delta
 
     # Update parameters
     for g_j in t.keys():
         for e_i in t[g_j].keys():
             t[e_i][g_j] = t[e_i][g_j][e_i] / c_2[g_j]
 
-
+    for j in q.keys():
+        for i in q[j].keys():
+            for l in q[j[i]].keys():
+                for m in q[j[i[m]]].keys():
+                    q[j][i][l][m] = c_3[j][i][l][m] / c_4[i][l][m]
 
 
 '''
