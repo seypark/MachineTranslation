@@ -101,17 +101,22 @@ for t in xrange(T):
         l_k = len(g)
 
         for i in xrange(m_k):
-            for j in xrange(l_k+1):
-                
-                e_i = e[i]
-                g_j = g[j]
 
-                sum_j = 0.0
-                for j in xrange(l_k+1):
-                    sum_j += (t[e_i][g_j])
+            sum_j = 0.0
+            for j in xrange(l_k+1):
+                e_i = e[i]
+                g_j = 'null'
+                if j < l_k
+                    g_j = g[j]
+                sum_j += (t[e_i][g_j])
+                            
+            for j in xrange(l_k+1):
+                e_i = e[i]
+                g_j = 'null'
+                if j < l_k
+                    g_j = g[j]
 
                 delta = t[e_i][g_j] / sum_j
-
 
                 c_1[g_j][e_i] = c_1[g_j][e_i] + delta
                 c_2[g_j] = c[g_j] + delta
