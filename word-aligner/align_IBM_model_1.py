@@ -22,7 +22,7 @@ e_word_count = 0
 g_word_count = 0
 
 #Init
-print 'Initialization'
+print 'Counting words'
 for (n, (g, e)) in enumerate(bitext):
     for e_i in set(e):
         if (e_count[e_i] == 1):
@@ -38,12 +38,23 @@ for (n, (g, e)) in enumerate(bitext):
             g_count[g_j] = 1
             g_word_count += 1
 
-
+print 'Initializing t and q function'
 # initialize p(e|g)
 for (n, (g, e)) in enumerate(bitext):
-    for e_i in set(e):
-        for g_j in set(g):
-            t[e_i][g_j] = 1.0 / e_word_count    
+    m = len(e)
+    l = len(g)
+
+    for i in xrange(m):
+        for j in xrange(l+1):
+            
+            e_i = e[i]
+            g_j = 'null'
+            if (j < l):
+                g_j = g[j]
+
+            t[e_i][g_j] = 1.0 / e_word_count
+            
+            q[j][i][l][m] = (1 / l+1)
 
 #for g_word in g_count.keys():
 #    for e_word in e_count.keys():
@@ -51,14 +62,15 @@ for (n, (g, e)) in enumerate(bitext):
         #sum_e t(e|g) = 1
 #        t[e_word][g_word] = 1.0 / e_word_count    
         
+#print 'q initialization'        
 # initialize q
 #sum_j=0^l q(j|i, l, m) where l is the length of g, m is the length of e
-for (n, (g, e)) in enumerate(bitext):
-    m = len(e)
-    l = len(g)
-    for i in xrange(m):
-        for j in xrange(l+1):
-            q[j][i][l][m] = (1 / (l+1))
+#for (n, (g, e)) in enumerate(bitext):
+#    m = len(e)
+#    l = len(g)
+#    for i in xrange(m):
+#        for j in xrange(l+1):
+#            q[j][i][l][m] = (1 / (l+1))
 
 print 'EM'
 #EM
@@ -88,16 +100,14 @@ for t in xrange(T):
         m_k = len(e)
         l_k = len(g)
 
-
-
         for i in xrange(m_k):
-            for j in xrange(l_k)+1:
+            for j in xrange(l_k+1):
                 
                 e_i = e[i]
                 g_j = g[j]
 
                 sum_j = 0.0
-                for j in xrange(l_k)+1:
+                for j in xrange(l_k+1):
                     sum_j += (t[e_i][g_j])
 
                 delta = t[e_i][g_j] / sum_j
