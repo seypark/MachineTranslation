@@ -75,8 +75,8 @@ for (n, (g, e)) in enumerate(bitext):
 print 'EM'
 #EM
 T = 10
-for t in xrange(T):
-    print t
+for tt in xrange(T):
+    print tt
     # set all counts c(...) = 0
     
     c_2 = defaultdict(float)
@@ -91,6 +91,11 @@ for t in xrange(T):
 
         for i in xrange(m_k):
             for j in xrange(l_k+1):
+                e_i = e[i]
+                g_j = 'null'
+                if j < l_k:
+                    g_j = g[j]
+
                 c_1[g_j][e_i] = 0
                 c_2[g_j] = 0
                 c_3[j][i][l_k][m_k] = 0
@@ -106,33 +111,39 @@ for t in xrange(T):
             for j in xrange(l_k+1):
                 e_i = e[i]
                 g_j = 'null'
-                if j < l_k
+                if j < l_k:
                     g_j = g[j]
+
                 sum_j += (t[e_i][g_j])
-                            
+            print sum_j
             for j in xrange(l_k+1):
                 e_i = e[i]
                 g_j = 'null'
-                if j < l_k
+                if j < l_k:
                     g_j = g[j]
 
                 delta = t[e_i][g_j] / sum_j
-
                 c_1[g_j][e_i] = c_1[g_j][e_i] + delta
-                c_2[g_j] = c[g_j] + delta
+                c_2[g_j] = c_2[g_j] + delta
+
                 c_3[j][i][l_k][m_k] = c_3[j][i][l_k][m_k] + delta
                 c_4[i][l_k][m_k] = c_4[i][l_k][m_k] + delta
 
     # Update parameters
-    for g_j in t.keys():
-        for e_i in t[g_j].keys():
-            t[e_i][g_j] = t[e_i][g_j][e_i] / c_2[g_j]
+    for e_i in t.keys():
+        for g_j in t[e_i].keys():
+
+            t[e_i][g_j] = c_1[e_i][g_j] / c_2[g_j]
+            print '%f = %f %f' % (t[e_i][g_j], c_1[e_i][g_j] , c_2[g_j])
 
     for j in q.keys():
         for i in q[j].keys():
-            for l in q[j[i]].keys():
-                for m in q[j[i[m]]].keys():
-                    q[j][i][l][m] = c_3[j][i][l][m] / c_4[i][l][m]
+            for l in q[j][i].keys():
+                for m in q[j][i][m].keys():
+                    if (i,l,m) in c_4:
+                        
+
+                        q[j][i][l][m] = c_3[j][i][l][m] / c_4[i][l][m]
 
 
 # use params to calculate alignment
