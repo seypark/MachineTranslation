@@ -53,7 +53,8 @@ for (n, (g, e)) in enumerate(bitext):
                 g_j = g[j]
 
             t[e_i][g_j] = 1.0 / e_word_count
-            
+            if t[e_i][g_j] == 0.0:
+                print e_word_count
             q[j][i][l][m] = (1 / l+1)
 
 #for g_word in g_count.keys():
@@ -114,8 +115,10 @@ for tt in xrange(T):
                 if j < l_k:
                     g_j = g[j]
 
+                if t[e_i][g_j] == 0:
+                    print t[e_i][g_j]
                 sum_j += (t[e_i][g_j])
-            print sum_j
+            #print sum_j
             for j in xrange(l_k+1):
                 e_i = e[i]
                 g_j = 'null'
@@ -130,12 +133,21 @@ for tt in xrange(T):
                 c_4[i][l_k][m_k] = c_4[i][l_k][m_k] + delta
 
     # Update parameters
-    for e_i in t.keys():
-        for g_j in t[e_i].keys():
+    for (k, (g, e)) in enumerate(bitext):
+        m_k = len(e)
+        l_k = len(g)
 
-            t[e_i][g_j] = c_1[e_i][g_j] / c_2[g_j]
-            print '%f = %f %f' % (t[e_i][g_j], c_1[e_i][g_j] , c_2[g_j])
+        for i in xrange(m_k):
+            for j in xrange(l_k+1):
 
+                e_i = e[i]
+                g_j = 'null'
+                if j < l_k:
+                    g_j = g[j]
+                
+                t[e_i][g_j] = c_1[g_j][e_i] / c_2[g_j]
+                #print '%f %f %f' % (t[e_i][g_j], c_1[e_i][g_j], c_2[g_j])
+            
     for j in q.keys():
         for i in q[j].keys():
             for l in q[j][i].keys():
@@ -164,6 +176,6 @@ for (k, (g, e)) in bitext :
                 best_pr = pr
                 a_i = j
 
-        print str(e_i) + "-" + str(best_a_pos),;
+        #print str(e_i) + "-" + str(best_a_pos),;
 
     print
