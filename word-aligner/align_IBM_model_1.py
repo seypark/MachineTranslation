@@ -179,3 +179,6 @@ for (k, (g, e)) in enumerate(bitext):
                 best_pr = pr
                 a_i = j
 
+        sys.stdout.write("%i-%i " % (i,a_j))
+
+    sys.stdout.write("\n")
