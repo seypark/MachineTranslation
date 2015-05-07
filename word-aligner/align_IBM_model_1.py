@@ -159,7 +159,7 @@ for tt in xrange(T):
 
 
 # use params to calculate alignment
-for (k, (g, e)) in bitext :
+for (k, (g, e)) in enumerate(bitext) :
     m_k = len(e)
     l_k = len(g)
 
