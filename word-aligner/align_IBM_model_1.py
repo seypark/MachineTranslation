@@ -159,17 +159,20 @@ for tt in xrange(T):
 
 
 # use params to calculate alignment
-for (k, (g, e)) in enumerate(bitext) :
+for (k, (g, e)) in enumerate(bitext)e :
     m_k = len(e)
     l_k = len(g)
 
     for i in xrange(m_k):
-        e_word = e[i]
         #fine a_i = arg max_j
         a_i = -1
         best_pr = -99.9
         for j in xrange(l_k+1):
-            g_word = g[i]
+            e_i = e[i]
+            g_j = 'null'
+            if j < l_k:
+                g_j = g[j]
+
             pr = q[g_j][e_i][l_k][m_k] * t[e_i][g_j]
 
             if pr > best_pr:
