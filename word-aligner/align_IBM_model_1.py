@@ -159,7 +159,7 @@ for tt in xrange(T):
 
 
 # use params to calculate alignment
-for (k, (g, e)) in enumerate(bitext)e :
+for (k, (g, e)) in enumerate(bitext):
     m_k = len(e)
     l_k = len(g)
 
@@ -179,6 +179,3 @@ for (k, (g, e)) in enumerate(bitext)e :
                 best_pr = pr
                 a_i = j
 
-        #print str(e_i) + "-" + str(best_a_pos),;
-
-    print
