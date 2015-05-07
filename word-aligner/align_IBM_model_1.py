@@ -22,7 +22,7 @@ e_word_count = 0
 g_word_count = 0
 
 #Init
-print 'Counting words'
+#print 'Counting words'
 for (n, (g, e)) in enumerate(bitext):
     for e_i in set(e):
         if (e_count[e_i] == 1):
@@ -38,7 +38,7 @@ for (n, (g, e)) in enumerate(bitext):
             g_count[g_j] = 1
             g_word_count += 1
 
-print 'Initializing t and q function'
+#print 'Initializing t and q function'
 # initialize p(e|g)
 for (n, (g, e)) in enumerate(bitext):
     m = len(e)
@@ -53,8 +53,8 @@ for (n, (g, e)) in enumerate(bitext):
                 g_j = g[j]
 
             t[e_i][g_j] = 1.0 / e_word_count
-            if t[e_i][g_j] == 0.0:
-                print e_word_count
+            #if t[e_i][g_j] == 0.0:
+                #print e_word_count
             q[j][i][l][m] = (1 / l+1)
 
 #for g_word in g_count.keys():
@@ -73,11 +73,11 @@ for (n, (g, e)) in enumerate(bitext):
 #        for j in xrange(l+1):
 #            q[j][i][l][m] = (1 / (l+1))
 
-print 'EM'
+#print 'EM'
 #EM
 T = 10
 for tt in xrange(T):
-    print tt
+    #print tt
     # set all counts c(...) = 0
     
     c_2 = defaultdict(float)
@@ -115,8 +115,8 @@ for tt in xrange(T):
                 if j < l_k:
                     g_j = g[j]
 
-                if t[e_i][g_j] == 0:
-                    print t[e_i][g_j]
+                #if t[e_i][g_j] == 0:
+                    #print t[e_i][g_j]
                 sum_j += (t[e_i][g_j])
             #print sum_j
             for j in xrange(l_k+1):
@@ -147,15 +147,17 @@ for tt in xrange(T):
                 
                 t[e_i][g_j] = c_1[g_j][e_i] / c_2[g_j]
                 #print '%f %f %f' % (t[e_i][g_j], c_1[e_i][g_j], c_2[g_j])
+                q[j][i][l_k][m_k] = c_3[j][i][l_k][m_k] / c_4[i][l_k][m_k]
+                #print '%f %f %f' % (q[j][i][l_k][m_k], c_3[j][i][l_k][m_k], c_4[i][l_k][m_k])
             
-    for j in q.keys():
-        for i in q[j].keys():
-            for l in q[j][i].keys():
-                for m in q[j][i][m].keys():
-                    if (i,l,m) in c_4:
+    #for j in q.keys():
+    #    for i in q[j].keys():
+    #        for l in q[j][i].keys():
+    #            for m in q[j][i][m].keys():
+    #                if (i,l,m) in c_4:
                         
 
-                        q[j][i][l][m] = c_3[j][i][l][m] / c_4[i][l][m]
+    #                    q[j][i][l][m] = c_3[j][i][l][m] / c_4[i][l][m]
 
 
 # use params to calculate alignment
@@ -167,18 +169,20 @@ for (k, (g, e)) in enumerate(bitext):
         #fine a_i = arg max_j
         a_i = -1
         best_pr = -99.9
-        for j in xrange(l_k+1):
+        for j in xrange(l_k):
             e_i = e[i]
             g_j = 'null'
             if j < l_k:
                 g_j = g[j]
 
-            pr = q[g_j][e_i][l_k][m_k] * t[e_i][g_j]
-
+            pr = q[j][i][l_k][m_k] * t[e_i][g_j]
+            #print 'q %f' % q[g_j][e_i][l_k][m_k]
+            #print t[e_i][g_j]
+            #print pr
             if pr > best_pr:
                 best_pr = pr
                 a_i = j
 
-        sys.stdout.write("%i-%i " % (i,a_j))
+        sys.stdout.write("%i-%i " % (a_i,i))
 
     sys.stdout.write("\n")
